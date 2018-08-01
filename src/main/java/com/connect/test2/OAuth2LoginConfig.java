@@ -1,7 +1,10 @@
 package com.connect.test2;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -16,7 +19,7 @@ import org.springframework.security.oauth2.core.oidc.IdTokenClaimNames;
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-public class OAuth2LoginConfig {
+public class OAuth2LoginConfig extends WebSecurityConfigurerAdapter {
 
     private final String clientId = "9ThSY82u8gIVmPlVJ075tL1J0fka";
     private final String clientSecret = "1otE7VkXQcANC_GZ1vFMFpMqqlYa";
@@ -26,19 +29,14 @@ public class OAuth2LoginConfig {
     private final String jwkUrl = "https://localhost:9443/oauth2/jwks";
     private final String userIndoUrl = "https://localhost:9443/oauth2/userinfo";
 
-
-    @EnableWebSecurity
-    public static class OAuth2LoginSecurityConfig extends WebSecurityConfigurerAdapter {
-
-        @Override
-        protected void configure(HttpSecurity http) throws Exception {
-            http
-                    .authorizeRequests()
-                    .anyRequest().authenticated()
-                    //.antMatchers("/connect").hasRole("ANONYMOUS")
-                    .and()
-                    .oauth2Login();
-        }
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http
+                .authorizeRequests()
+                .anyRequest().authenticated()
+                //.antMatchers("/connect").hasRole("ANONYMOUS")
+                .and()
+                .oauth2Login();
     }
 
 
